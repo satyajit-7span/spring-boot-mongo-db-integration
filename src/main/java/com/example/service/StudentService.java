@@ -10,5 +10,11 @@ public interface StudentService {
 
     List<StudentResponseDto> findAll();
 
+    BaseResponse findByEmail(String email);
+
     BaseResponse insert(StudentRequestDto studentRequestDto);
+
+    BaseResponse deleteByEmail(String email);
+
+    BaseResponse update(String id, StudentRequestDto studentRequestDto);
 }

@@ -33,6 +33,22 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public BaseResponse findByEmail(String email) {
+        log.info("findByEmail() method called from service layer...!!");
+
+        StudentResponseDto responseDTO = studentMapper.toStudentResponseDto(studentRepository.findByEmail(email));
+
+        if(responseDTO == null) {
+            response.setMessage(StudentConstants.RECORD_NOT_FOUND);
+        } else {
+            response.setMessage(null);
+            response.setStudent(responseDTO);
+        }
+
+        return response;
+    }
+
+    @Override
     public BaseResponse insert(StudentRequestDto studentRequestDto) {
         log.info("save() method called from service layer...!!");
 
@@ -41,6 +57,45 @@ public class StudentServiceImpl implements StudentService {
         studentRepository.insert(student);
 
         response.setMessage(StudentConstants.RECORD_SAVED_SUCCESSFULLY);
+
+        return response;
+    }
+
+    @Override
+    public BaseResponse deleteByEmail(String email) {
+        log.info("deleteByEmail() called from service layer...!!");
+
+        Student student = studentRepository.findByEmail(email);
+
+        if(student != null) {
+            studentRepository.deleteByEmail(email);
+            response.setMessage(StudentConstants.RECORD_DELETED_SUCCESSFULLY);
+        } else {
+            response.setMessage(StudentConstants.RECORD_NOT_FOUND);
+        }
+
+        return response;
+    }
+
+    @Override
+    public BaseResponse update(String id, StudentRequestDto studentRequestDto) {
+        log.info("update() method called from service layer...!!");
+
+        Student student = studentMapper.toStudentEntity(studentRequestDto);
+        Student student1 = studentRepository.findById(id).get();
+
+        StudentResponseDto responseDto = new StudentResponseDto();
+
+        if(studentRequestDto.getName() != null) {
+            student1.setName(studentRequestDto.getName());
+        }
+
+        if(studentRequestDto.getEmail() != null) {
+            student1.setEmail(studentRequestDto.getEmail());
+        }
+
+        studentRepository.save(student1);
+        response.setMessage(StudentConstants.RECORD_UPDATED_SUCCESSFULLY);
 
         return response;
     }

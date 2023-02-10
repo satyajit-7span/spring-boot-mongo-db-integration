@@ -34,11 +34,35 @@ public class StudentController {
         return responseList;
     }
 
+    @GetMapping("/{email}")
+    public ResponseEntity<BaseResponse> findByEmail(@PathVariable String email) {
+        log.info("findByEmail() method called from controller layer...!!");
+        BaseResponse baseResponse = studentService.findByEmail(email);
+
+        return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<BaseResponse> save(@Valid @RequestBody StudentRequestDto studentRequestDto) {
         log.info("save() method called from controller layer...!!");
-
         BaseResponse baseResponse = studentService.insert(studentRequestDto);
+
         return new ResponseEntity<>(baseResponse, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{email}")
+    public ResponseEntity<BaseResponse> deleteByEmail(@PathVariable String email) {
+        log.info("deleteByEmail() method called from controller layer...!!");
+        BaseResponse baseResponse = studentService.deleteByEmail(email);
+
+        return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<BaseResponse> update(@PathVariable String id, @Valid @RequestBody StudentRequestDto RequestDTO) {
+        log.info("update() method called from controller layer...!!");
+
+        BaseResponse baseResponse = studentService.update(id, RequestDTO);
+        return new ResponseEntity<>(baseResponse, HttpStatus.OK);
     }
 }
